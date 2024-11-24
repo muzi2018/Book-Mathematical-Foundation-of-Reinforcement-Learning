@@ -9,7 +9,7 @@ import numpy as np
 if __name__ == "__main__":             
     env = GridWorld()
     state = env.reset()               
-    for t in range(1000):
+    for t in range(1):
         env.render()
         action = random.choice(env.action_space)
         next_state, reward, done, info = env.step(action)
@@ -26,6 +26,8 @@ if __name__ == "__main__":
     
     # Add state values
     values = np.random.uniform(0,10,(env.num_states,))
+    print("values")
+    print(values)
     env.add_state_values(values)
 
     # Render the environment

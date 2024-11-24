@@ -50,3 +50,22 @@ $$
 10. **What are the limitations of using a grid world example for reinforcement learning?**
     - Consider what aspects of real-world scenarios might not be captured by this simplified model.
 
+# Basic Concepts
+
+state and action; 
+
+deterministic state transitions, stochastic state transition; 
+
+deterministic policy, stochastic policy, A tabular representation of a policy ;  
+
+The reward is a function of the state s and action a.
+
+Hence, it is also denoted as r(s; a). 
+
+ A trajectory is a state-action-reward chain.  
+
+Returns are also called total rewards or cumulative rewards.  A return consists of an immediate reward and future rewards.   
+
+When interacting with the environment by following a policy, the agent may stop at some terminal states. The resulting trajectory is called an episode (or a trial).  
+
+MDP
