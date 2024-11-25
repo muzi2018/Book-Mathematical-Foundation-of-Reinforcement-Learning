@@ -40,7 +40,7 @@ if __name__ == "__main__":
     # ## env, row->x, column->y
     env.env_size = (2,2)
     env.num_states = 4
-    env.start_state = (0,0)
+    env.start_state = (1,0)
     env.forbidden_states = [(1,0)]
     env.target_state = (1,1)
     env.reset()
@@ -56,7 +56,7 @@ if __name__ == "__main__":
         for state, action in policy:
             if env.agent_state == state:
                 next_state, reward, done, info = env.step(action)
-                print(f"Step: {t}, Action: {action}, State: {next_state+(np.array([1,1]))}, Reward: {reward}, Done: {done}")
+                print(f"Step: {t}, Action: {action}, State: {next_state}, Reward: {reward}, Done: {done}")
     gamma_ = 0.1
     env.render(animation_interval=2) 
     print("Grid_world")
