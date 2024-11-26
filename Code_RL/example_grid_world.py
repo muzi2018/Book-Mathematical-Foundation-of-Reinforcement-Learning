@@ -3,7 +3,7 @@ import os
 from grid_world import GridWorld
 import random
 import numpy as np
-
+import random
 # 3 - Chapter 2 State Values and Bellman Equation
 # 1. state value: which is defined as the average reward that an agent can obtain if it follows a given policy
 # 2. Bellman equation which is an important tool for analyzing state values, in a nutshell, Bellman equation describes the relationships between the values of all states. By solving the Bellman equation , we can obtain the state values
@@ -11,9 +11,7 @@ import numpy as np
 # 4. action value
 
 #
-if __name__ == "__main__":  
-    # 2.4 Bellman equation
-    
+if __name__ == "__main__":      
     # 2.5 Examples for illustrating the Bellman equation
     env = GridWorld()
     ## aciton 
@@ -48,9 +46,9 @@ if __name__ == "__main__":
     policy = {
         's1': {
             'up': 0.0,    # Probability of taking action 'up' in state s1
-            'down': 1.0,  # Probability of taking action 'down' in state s1
+            'down': 0.5,  # Probability of taking action 'down' in state s1
             'left': 0.0,  # Probability of taking action 'left' in state s1
-            'right': 0.0, # Probability of taking action 'right' in state s1
+            'right': 0.5, # Probability of taking action 'right' in state s1
             'stay': 0.0   # Probability of taking action 'stay' in state s1
         },
         's2': {
@@ -78,33 +76,27 @@ if __name__ == "__main__":
     ## state value
     G_t = 0
     gamma_ = 0.9
-    
-    # Bellman equation 
-    ## v_{\pi}(s_1) = 0 + \gammar v_{\pi}(s_1)
-    ## v_{\pi}(s_2) = 1 + \gammar v_{\pi}(s_4)
-    ## v_{\pi}(s_3) = 1 + \gammar v_{\pi}(s_4)
-    ## v_{\pi}(s_4) = 1 + \gammar v_{\pi}(s_4)
-    
 
-    
     ###
     # 1. without Bellman equation, Use an iterative approach to get the state value
-    #    it can only converge after many iterations.
+    #    it can only converge after many iterations about the trajectory
     ###
-    # Iterative approach to approximate state values using Bellman equation
+    # Iterative approach to approximate state values
     state_values = {state: 0 for state in states.keys()}  # Initialize state values to 0
     gamma_ = 0.9  # Discount factor
     num_iterations = 200  # Number of iterations for convergence
     for t in range(num_iterations):  # Iteratively update state values
+        # env.render()
         for state_name, state_coords in states.items():
             if env.agent_state == state_coords:
                 for action, action_prob in policy[state_name].items():
                     if action_prob > 0:
                         next_state, reward, done, info = env.step(actions[action])
                         # G_t = R_{t+1} + \gamma R_{t+2} + \gamma^2 R_{t+3} + ... discounted return along a trajectory
-                        G_t += reward * (gamma_ ** t)
+                        G_t += action_prob * reward * (gamma_ ** t)
+                        break
                 print(f"Step: {t}, Action: {action}, State: {next_state}, Reward: {reward}, Done: {done}")
-                break
+                
     print(f"State value: {G_t}")
     env.render(animation_interval=7) 
     
