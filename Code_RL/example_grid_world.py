@@ -52,13 +52,18 @@ if __name__ == "__main__":
         (s3, right_),
         (s4, stay_)
     ]
+    ## state value
+    G_t = 0
+    gamma_ = 0.1
     for t in range(4):
         env.render()
         for state, action in policy:
             if env.agent_state == state:
                 next_state, reward, done, info = env.step(action)
+                G_t = G_t + reward ** gamma_
                 print(f"Step: {t}, Action: {action}, State: {next_state}, Reward: {reward}, Done: {done}")
                 break
-    gamma_ = 0.1
+    print(f"State value: {G_t}")
+    
     env.render(animation_interval=7) 
     print("Grid_world")
