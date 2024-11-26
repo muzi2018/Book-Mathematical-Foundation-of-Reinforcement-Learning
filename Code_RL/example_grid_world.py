@@ -32,17 +32,18 @@ if __name__ == "__main__":
     
     # 2.5 Examples for illustrating the Bellman equation
     env = GridWorld()
-    ## aciton
-    (up_, down_, left_, right_, stay_) = (env.action_space[3], env.action_space[1], env.action_space[2], env.action_space[0], env.action_space[4])
+    ## aciton 
+    ### up_ = (0,-1); down_ = (0, 1); left_ = (-1, 0); right_ = (1, 0)
+    (up_, down_, left_, right_, stay_) = (env.action_space[2], env.action_space[0], env.action_space[3], env.action_space[1], env.action_space[4])
 
     # ## state
     (s1, s2, s3, s4) = ((0, 0), (1, 0), (0, 1), (1, 1))
     # ## env, row->x, column->y
-    env.env_size = (2,2)
+    env.env_size = (2, 2)
     env.num_states = 4
-    env.start_state = (1,0)
-    env.forbidden_states = [(1,0)]
-    env.target_state = (1,1)
+    env.start_state = (0, 0)
+    env.forbidden_states = [(1, 0)]
+    env.target_state = (1, 1)
     env.reset()
     ## Policy    
     policy = [
@@ -57,6 +58,7 @@ if __name__ == "__main__":
             if env.agent_state == state:
                 next_state, reward, done, info = env.step(action)
                 print(f"Step: {t}, Action: {action}, State: {next_state}, Reward: {reward}, Done: {done}")
+                break
     gamma_ = 0.1
-    env.render(animation_interval=2) 
+    env.render(animation_interval=7) 
     print("Grid_world")
