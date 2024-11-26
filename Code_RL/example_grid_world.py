@@ -55,6 +55,15 @@ if __name__ == "__main__":
     ## state value
     G_t = 0
     gamma_ = 0.1
+    
+    # Bellman equation 
+    ## v_{\pi}(s_1) = 0 + \gammar v_{\pi}(s_1)
+    ## v_{\pi}(s_2) = 1 + \gammar v_{\pi}(s_4)
+    ## v_{\pi}(s_3) = 1 + \gammar v_{\pi}(s_4)
+    ## v_{\pi}(s_4) = 1 + \gammar v_{\pi}(s_4)
+    
+    
+    
     for t in range(4):
         env.render()
         for state, action in policy:
