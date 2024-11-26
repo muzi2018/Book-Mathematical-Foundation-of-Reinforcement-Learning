@@ -12,23 +12,7 @@ import numpy as np
 
 #
 if __name__ == "__main__":  
-    # 2.1 Movivating example 1: Why are returns important
-    ## firt policy 
-    # up_ = (-1, 0)
-    # down_ = (1, 0)
-    # left_ = (0, -1)
-    # right_ = (0, 1)
-    # stay_ = (0, 0)
-    # action = random.choice(env.action_space)
-    # next_state, reward, done, info= env.step(action)
-    
-    # 2.2 Motivating example 2: How to calculate returns?
-    # 2.3 State values
-    ## When both the policy and the system model are deterministic, starting from a state always leads to the same trjectory. In this case, the return obtained starting from a state is equal to the value of that state.
-    ## By contrast, when either the policy or the system model is stochastic, starting from the same state may generate different trjectories. In this case, the returns of different trajectories are different, and the state value is the maen of these returns.
-    
     # 2.4 Bellman equation
-    # G_t = R_{t+1} + \gamma R_{t+2} + \gamma^2 R_{t+3} + ... discounted return along a trajectory
     
     # 2.5 Examples for illustrating the Bellman equation
     env = GridWorld()
@@ -38,10 +22,14 @@ if __name__ == "__main__":
 
     # ## state
     (s1, s2, s3, s4) = ((0, 0), (1, 0), (0, 1), (1, 1))
+    ## reward
+    env.reward_forbidden = -1
+    env.reward_step = 0
+    env.reward_target = 1
     # ## env, row->x, column->y
     env.env_size = (2, 2)
     env.num_states = 4
-    env.start_state = (0, 0)
+    env.start_state = s2
     env.forbidden_states = [(1, 0)]
     env.target_state = (1, 1)
     env.reset()
@@ -54,7 +42,7 @@ if __name__ == "__main__":
     ]
     ## state value
     G_t = 0
-    gamma_ = 0.1
+    gamma_ = 0.9
     
     # Bellman equation 
     ## v_{\pi}(s_1) = 0 + \gammar v_{\pi}(s_1)
@@ -62,17 +50,29 @@ if __name__ == "__main__":
     ## v_{\pi}(s_3) = 1 + \gammar v_{\pi}(s_4)
     ## v_{\pi}(s_4) = 1 + \gammar v_{\pi}(s_4)
     
-    
-    
-    for t in range(4):
+
+
+    ###
+    # 1. without Bellman equation, Use an iterative approach to get the state value
+    #    it can only converge after many iterations.
+    ###
+    for t in range(200): # converge number > 200
         env.render()
         for state, action in policy:
             if env.agent_state == state:
                 next_state, reward, done, info = env.step(action)
-                G_t = G_t + reward ** gamma_
+                # G_t = R_{t+1} + \gamma R_{t+2} + \gamma^2 R_{t+3} + ... discounted return along a trajectory
+                G_t += reward * (gamma_ ** t)
                 print(f"Step: {t}, Action: {action}, State: {next_state}, Reward: {reward}, Done: {done}")
                 break
     print(f"State value: {G_t}")
-    
     env.render(animation_interval=7) 
-    print("Grid_world")
+    
+    ###
+    # 2. with Bellman equation, sometimes we could get the analytical solution, it is easier to get 
+    #    the state value.
+    ###
+    # for s1
+    G_t = gamma_ / (1 - gamma_)
+    
+    
