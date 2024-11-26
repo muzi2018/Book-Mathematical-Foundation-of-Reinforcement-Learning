@@ -38,7 +38,7 @@ if __name__ == "__main__":
     # ## env, row->x, column->y
     env.env_size = (2, 2)
     env.num_states = 4
-    env.start_state = states['s1']
+    env.start_state = states['s2']
     env.forbidden_states = [(1, 0)]
     env.target_state = (1, 1)
     env.reset()
@@ -85,20 +85,26 @@ if __name__ == "__main__":
     state_values = {state: 0 for state in states.keys()}  # Initialize state values to 0
     gamma_ = 0.9  # Discount factor
     num_iterations = 200  # Number of iterations for convergence
-    for t in range(num_iterations):  # Iteratively update state values
-        # env.render()
-        for state_name, state_coords in states.items():
-            if env.agent_state == state_coords:
-                for action, action_prob in policy[state_name].items():
-                    if action_prob > 0:
-                        next_state, reward, done, info = env.step(actions[action])
-                        # G_t = R_{t+1} + \gamma R_{t+2} + \gamma^2 R_{t+3} + ... discounted return along a trajectory
-                        G_t += action_prob * reward * (gamma_ ** t)
-                        break
-                print(f"Step: {t}, Action: {action}, State: {next_state}, Reward: {reward}, Done: {done}")
-                
-    print(f"State value: {G_t}")
-    env.render(animation_interval=7) 
+    num_traj = 60
+    for i in range(num_traj):
+        env.reset()
+        for t in range(num_iterations):  # Iteratively update state values
+            # env.render()
+            for state_name, state_coords in states.items():
+                if env.agent_state == state_coords:
+                    # Choose action based on the policy's probabilities
+                    actions_list = list(policy[state_name].keys())
+                    probobilities = list(policy[state_name].values())
+                    chosen_action =  random.choices(actions_list, probobilities)[0]
+                    action_probability = probobilities[actions_list.index(chosen_action)]
+                    next_state, reward, done, info = env.step(actions[chosen_action])
+                    # G_t = R_{t+1} + \gamma R_{t+2} + \gamma^2 R_{t+3} + ... discounted return along a trajectory
+                    G_t += action_probability*reward * (gamma_ ** t)
+                    print(f"Step: {t}, Action: {chosen_action}, State: {next_state+(np.array([1,1]))}, Reward: {reward}, Done: {done}")
+                    break
+        print(f"{i}'th trajectory")                
+    print(f"State value: {G_t/num_traj}")
+    # env.render(animation_interval=7) 
     
     # ###
     # # 2. with Bellman equation, sometimes we could get the analytical solution, it is easier to get 
