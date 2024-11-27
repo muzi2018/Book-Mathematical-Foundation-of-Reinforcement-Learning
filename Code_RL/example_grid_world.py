@@ -79,6 +79,8 @@ if __name__ == "__main__":
 
     gamma_ = 0.9
 
+
+
     ###
     # 1. without Bellman equation, Use an iterative approach to get the state value
     #    it can only converge after many iterations about the trajectory
