@@ -99,8 +99,27 @@ $$
 
 premise: $p(r \mid s, a)$ and $p\left(s^{\prime} \mid s, a\right)$ are known
 
+Advantage: useful for theoretical analysis purpose
+
+Disadvantage: not applicable in practice 
+
 Since $v_\pi=r_\pi+\gamma P_\pi v_\pi$ is a simple linear equation, its closed-form solution can be easily obtained as
 
 $$
 v_\pi=\left(I-\gamma P_\pi\right)^{-1} r_\pi .
+$$
+
+
+
+## Iterative solution
+
+numerical algorithm
+
+$v_{k+1}=r_\pi+\gamma P_\pi v_k, \quad k=0,1,2, \ldots$
+
+
+This algorithm generates a sequence of values $\left\{v_0, v_1, v_2, \ldots\right\}$, where $v_0 \in \mathbb{R}^n$ is an initial guess of $v_\pi$. It holds that
+
+$$
+v_k \rightarrow v_\pi=\left(I-\gamma P_\pi\right)^{-1} r_\pi, \quad \text { as } k \rightarrow \infty .
 $$
