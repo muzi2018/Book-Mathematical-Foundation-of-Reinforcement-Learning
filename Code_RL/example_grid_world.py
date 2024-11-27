@@ -38,7 +38,7 @@ if __name__ == "__main__":
     # ## env, row->x, column->y
     env.env_size = (2, 2)
     env.num_states = 4
-    env.start_state = states['s2']
+    env.start_state = states['s1']
     env.forbidden_states = [(1, 0)]
     env.target_state = (1, 1)
     env.reset()
@@ -75,6 +75,8 @@ if __name__ == "__main__":
     }
     ## state value
     G_t = 0
+    G_t_total = 0
+
     gamma_ = 0.9
 
     ###
@@ -84,10 +86,11 @@ if __name__ == "__main__":
     # Iterative approach to approximate state values
     state_values = {state: 0 for state in states.keys()}  # Initialize state values to 0
     gamma_ = 0.9  # Discount factor
-    num_iterations = 200  # Number of iterations for convergence
-    num_traj = 60
+    num_iterations = 100  # Number of iterations for convergence
+    num_traj = 100
     for i in range(num_traj):
         env.reset()
+        G_t = 0
         for t in range(num_iterations):  # Iteratively update state values
             # env.render()
             for state_name, state_coords in states.items():
@@ -99,11 +102,17 @@ if __name__ == "__main__":
                     action_probability = probobilities[actions_list.index(chosen_action)]
                     next_state, reward, done, info = env.step(actions[chosen_action])
                     # G_t = R_{t+1} + \gamma R_{t+2} + \gamma^2 R_{t+3} + ... discounted return along a trajectory
-                    G_t += action_probability*reward * (gamma_ ** t)
-                    print(f"Step: {t}, Action: {chosen_action}, State: {next_state+(np.array([1,1]))}, Reward: {reward}, Done: {done}")
+                    G_t += reward * (gamma_ ** t)
+                    if(next_state == (0,0)):
+                        print(f"Step: {t}, State: {next_state}, Action: {chosen_action}, "
+                            f"Probability: {action_probability:.4f}, Reward: {reward}, G_t: {G_t:.6f}")
                     break
-        print(f"{i}'th trajectory")                
-    print(f"State value: {G_t/num_traj}")
+        print(f"G_t:  {G_t}")
+        G_t_total += G_t
+        print(f"Trajectory {i + 1} completed. G_t: {G_t:.6f}")               
+      # Average state value
+    avg_state_value = G_t_total / num_traj
+    print(f"Average State Value: {avg_state_value:.6f}")
     # env.render(animation_interval=7) 
     
     # ###
