@@ -38,10 +38,10 @@ if __name__ == "__main__":
     # ## env, row->x, column->y
     env.env_size = (2, 2)
     env.num_states = 4
-    env.start_state = states['s1']
+    env.start_state = states['s2']
     env.forbidden_states = [(1, 0)]
     env.target_state = (1, 1)
-    env.reset()
+    
     ## Policy    
     policy = {
         's1': {
@@ -73,57 +73,52 @@ if __name__ == "__main__":
             'stay': 1.0   # Example: only staying in state s4
         }
     }
-    ## state value
-    G_t = 0
-    G_t_total = 0
 
     action_values = {state: {action: 0 for action in actions.keys()} for state in states.keys()}
+    sum_action_values = {state: {action: [] for action in actions.keys()} for state in states.keys()}
+
     gamma_ = 0.9
-
-
-
-    ###
-    # 1. without Bellman equation, Use an iterative approach to get the state value
-    #    it can only converge after many iterations about the trajectory
-    ###
-    # Iterative approach to approximate state values
-    state_values = {state: 0 for state in states.keys()}  # Initialize state values to 0
-    gamma_ = 0.9  # Discount factor
     num_iterations = 100  # Number of iterations for convergence
-    num_traj = 10
-    for i in range(num_traj):
+
+    # Function to generate an episode
+    def generate_episode():
+        episode = []
+        # start from s1
+        env.start_state = states['s1']
         env.reset()
-        for t in range(num_iterations):  # Iteratively update state values
-            # env.render()
-            for state_name, state_coords in states.items():
-                if env.agent_state == state_coords:
-                    # Choose action based on the policy's probabilities
-                    actions_list = list(policy[state_name].keys())
-                    probobilities = list(policy[state_name].values())
-                    chosen_action =  random.choices(actions_list, probobilities)[0]
-                    action_probability = probobilities[actions_list.index(chosen_action)]
-                    # Execute chosen action
-                    next_state, reward, done, info = env.step(actions[chosen_action])
-                    
-                    
-                    # Calculate Q(s, a)
-                    # Immediate reward + discounted future rewards based on policy
-                    next_state_name = None
-                    for name, coords in states.items():
-                        if coords == next_state:
-                            next_state_name = name
-                            break
-                    if next_state_name:
-                        future_value = sum(policy[next_state_name][next_action] * action_values[next_state_name][next_action]
-                                        for next_action in actions.keys())
-                        action_values[state_name][chosen_action] = reward + gamma_ * future_value
+        _state_name = 's1'
+        while True:
+            actions_list = list(policy[_state_name].keys())
+            probobilities = list(policy[_state_name].values())
+            chosen_action =  random.choices(actions_list, probobilities)[0]
+            next_state, reward, done, info = env.step(actions[chosen_action])
+            episode.append((_state_name, chosen_action, reward))
+            
+            for name, coords in states.items():
+                if coords == next_state:
+                    next_state_name = name
                     break
+            _state_name = next_state_name
+            if _state_name == 's4':
+                break
+        return episode
+        print('generate_episode')
+    # generate_episode()
+
+    def update_action_values(episodes):
+        for episode in episodes:
+            G = 0 # return
+            for state_name, action, reward in reversed(episode):
+                G = reward + gamma_ * G
+                sum_action_values[state_name][action].append(G)
+                action_values[state_name][action] = np.mean(sum_action_values[state_name][action])
+# Generate episodes and update action values
+num_episodes = 300
+episodes = [generate_episode() for _ in range(num_episodes)]
+update_action_values(episodes)
 
 # Print the action values
-print("Action Values (Q):")
-for state, action_value in action_values.items():
-    print(f"State: {state}")
-    for action, value in action_value.items():
-        print(f"  Action: {action}, Q(s, a): {value/10.0:.6f}")
-    
-    
+print("Estimated action values (q-values):")
+for state_name, actions_dict in action_values.items():  # Outer loop for states
+    for action, value in actions_dict.items():  # Inner loop for actions
+        print(f"q({state_name}, {action}) = {value:.2f}")
