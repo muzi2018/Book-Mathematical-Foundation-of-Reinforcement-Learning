@@ -12,7 +12,6 @@ import random
 
 #
 if __name__ == "__main__":      
-    # 2.5 Examples for illustrating the Bellman equation
     env = GridWorld()
     ## aciton 
     ### up_ = (0,-1); down_ = (0, 1); left_ = (-1, 0); right_ = (1, 0)
@@ -46,9 +45,9 @@ if __name__ == "__main__":
     policy = {
         's1': {
             'up': 0.0,    # Probability of taking action 'up' in state s1
-            'down': 0.5,  # Probability of taking action 'down' in state s1
+            'down': 0.0,  # Probability of taking action 'down' in state s1
             'left': 0.0,  # Probability of taking action 'left' in state s1
-            'right': 0.5, # Probability of taking action 'right' in state s1
+            'right': 1.0, # Probability of taking action 'right' in state s1
             'stay': 0.0   # Probability of taking action 'stay' in state s1
         },
         's2': {
@@ -80,7 +79,56 @@ if __name__ == "__main__":
     gamma_ = 0.9
 
 
+    # Solves the Bellman equations using a system of linear equations
+    ## Coefficients matrix for the system of equations
+    A = np.array([
+        [1, -gamma_, 0, 0],   # v_pi(s1) = -1 + gamma * v_pi(s2)
+        [0, 1, 0, -gamma_],   # v_pi(s2) = +1 + gamma * v_pi(s4)
+        [0, 0, 1, -gamma_],   # v_pi(s3) = +1 + gamma * v_pi(s4)
+        [0, 0, 0, 1 - gamma_] # v_pi(s4) = +1 + gamma * v_pi(s4)
+    ])
 
+    # Right-hand side vector
+    b = np.array([
+        -1,  # Constant term for v_pi(s1)
+        1,   # Constant term for v_pi(s2)
+        1,   # Constant term for v_pi(s3)
+        1    # Constant term for v_pi(s4)
+    ])
+
+    # Solve the system of equations
+    v_pi = np.linalg.solve(A, b)
+
+    # Display the results
+    for i, value in enumerate(v_pi, 1):
+        print(f"v_pi(s{i}) = {value:.2f}")
+
+
+    # Known state values (v_pi) from previous calculations
+    v_pis = {
+        's1': v_pi[0],
+        's2': v_pi[1],
+        's3': v_pi[2],
+        's4': v_pi[3],
+    }
+
+    # Calculate q_pi(s, a) values based on the given equations
+    q_pi = {
+        'q_pi(s1, a1)': -1 + gamma_ * v_pis['s1'],  # q_pi(s1, a1) = -1 + gamma * v_pi(s1)
+        'q_pi(s1, a2)': -1 + gamma_ * v_pis['s2'],  # q_pi(s1, a2) = -1 + gamma * v_pi(s2)
+        'q_pi(s1, a3)': 0  + gamma_ * v_pis['s3'],   # q_pi(s1, a3) = 0 + gamma * v_pi(s3)
+        'q_pi(s1, a4)': -1 + gamma_ * v_pis['s1'],  # q_pi(s1, a4) = -1 + gamma * v_pi(s1)
+        'q_pi(s1, a5)': 0  + gamma_ * v_pis['s1'],   # q_pi(s1, a5) = 0 + gamma * v_pi(s1)
+    }
+
+    # Print the calculated q_pi(s, a) values
+    for action, value in q_pi.items():
+        print(f"{action} = {value:.2f}")
+
+    exit()
+    
+    
+    
     ###
     # 1. without Bellman equation, Use an iterative approach to get the state value
     #    it can only converge after many iterations about the trajectory
