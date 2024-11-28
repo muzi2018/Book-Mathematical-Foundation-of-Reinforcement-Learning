@@ -1,0 +1,18 @@
+﻿I have a grid world
+it has four states
+states = {
+    's1': (0, 0),  # State s1 at coordinates (0, 0)
+    's2': (1, 0),  # State s2 at coordinates (1, 0)
+    's3': (0, 1),  # State s3 at coordinates (0, 1)
+    's4': (1, 1)   # State s4 at coordinates (1, 1)
+}
+and five actions
+actions = {
+    'up': env.action_space[2],    # Action for moving up
+    'down': env.action_space[0],   # Action for moving down
+    'left': env.action_space[3],   # Action for moving left
+    'right': env.action_space[1],  # Action for moving right
+    'stay': env.action_space[4]     # Action for staying in place
+}
+
+
