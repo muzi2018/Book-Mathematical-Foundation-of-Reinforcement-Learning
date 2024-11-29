@@ -53,7 +53,7 @@ v(s) & =\max _{\pi(s) \in \Pi(s)} \sum_{a \in \mathcal{A}} \pi(a \mid s)\left(\s
 $$
 **Solve Bellman optimality equation** 
 
-1.Maximization of the right-hand side of the BOE  
+1.Maximization of the right-hand side of the BOE  **(solving $v$ and $\pi$ one by one)**
 $$
 v(s)=\max _{\pi(s) \in \Pi(s)} \sum_{a \in \mathcal{A}} \pi(a \mid s) q(s, a), \quad s \in \mathcal{S} .
 $$
@@ -72,7 +72,7 @@ $$
 
 This means the optimal policy will select the action $a^*$ that maximizes $q(s, a)$ with probability 1 and assign probability 0 to all other actions. This allocation achieves the highest possible value for $v(s)$ because it chooses the best action for each state.
 
-Here, $a^*=\arg \max _a q(s, a)$. In summary, the optimal policy $\pi(s)$ is the one that selects the action that has the greatest value of $q(s, a)$.
+Here, $a^*=\arg \max _a q(s, a)$. **In summary, the optimal policy $\pi(s)$ is the one that selects the action that has the greatest value of $q(s, a)$.**
 
 2.Matrix-vector form of the BOE  
 

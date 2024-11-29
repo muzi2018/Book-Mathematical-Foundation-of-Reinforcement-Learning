@@ -1,4 +1,16 @@
 ﻿from scipy.optimize import linprog
+pi_a1s = 0.2
+pi_a2s = 0.3
+pi_a3s = 0.5
+# pi doesn't influent the q value
+q_sa1 = 1
+q_sa2 = 2
+q_sa3 = 3
+vs = pi_a1s * q_sa1 + pi_a2s * q_sa2 + pi_a3s * q_sa3
+print("######")
+print("The policy value for state s: ", vs)
+
+exit()
 
 # Given q values (replace these with your actual values)
 q1, q2, q3 = 5, 8, 10  # Example values, where q3 >= q1, q2

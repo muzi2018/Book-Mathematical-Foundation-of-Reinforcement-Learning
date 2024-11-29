@@ -1,18 +1,26 @@
-﻿from sympy import symbols, solve, Max
-# x=\max _{y \in \mathbb{R}}\left(2 x-1-y^2\right) .
-# Define the variables
-x, y = symbols('x y')
+﻿def solve_equation():
+    # Step 1: Solve for y that maximizes the expression 2x - 1 - y^2
+    # y = 0 gives the maximum because -y^2 is maximized at y = 0
+    def maximize_y(x):
+        y = 0  # Maximum of -y^2 is achieved when y = 0
+        max_value = 2 * x - 1 - y**2  # Substitute y = 0
+        return max_value, y
+    
+    # Step 2: Solve for x when y = 0
+    # Equation becomes x = 2x - 1
+    def solve_x():
+        x = 1  # Manually solve x = 2x - 1 -> x = 1
+        return x
 
-# Define the function we need to maximize with respect to y
-function = 2 * x - 1 - y**2
+    # Solve for x and y
+    x = solve_x()
+    max_value, y = maximize_y(x)
+    
+    # Verify the solution
+    verified = abs(x - (2 * x - 1 - y**2)) < 1e-6  # Check if x satisfies the equation
+    return x, y, verified
 
-# Step 1: Solve for y by finding the maximum of the function with respect to y
-y_max = Max(function, y).subs(y, 0)  # The maximum is achieved when y=0
-
-# Step 2: Substitute y=0 into the original equation and solve for x
-equation = x - (2 * x - 1)  # The equation simplifies to x = 2*x - 1 when y=0
-solution_x = solve(equation, x)[0]
-
-# Print the results
-print(f"The solution for x is: {solution_x}")
-print(f"The solution for y is: {y_max}")
+# Call the solver and print the result
+x, y, verified = solve_equation()
+print(f"Solution: x = {x}, y = {y}")
+print(f"Verification passed: {verified}")
