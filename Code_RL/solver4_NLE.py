@@ -1,27 +1,25 @@
-﻿# Define the function that represents the equation to solve: x = 2x - 1
-def func(x):
-    return 2 * x - 1
+﻿# Fixed-point iteration for solving x^2 - 4x + 3 = 0
+def fixed_point_iteration(initial_guess, tolerance, max_iterations):
+    def g(x):
+        return (x**2 + 3) / 4  # Iterative function
 
-# Define a simple iterative method to solve the equation
-def solve_nonlinear_equation(initial_guess, tolerance=1e-6, max_iterations=1000):
     x = initial_guess
     for i in range(max_iterations):
-        new_x = func(x)
-        
-        # Check if the difference between new_x and x is below the tolerance level
-        if abs(new_x - x) < tolerance:
-            print(f"Converged to solution x = {new_x} after {i+1} iterations")
-            return new_x
-        x = new_x
-    
-    print("Maximum iterations reached without convergence")
+        x_next = g(x)
+        print(f"Iteration {i + 1}: x = {x_next}")
+        # Check for convergence
+        if abs(x_next - x) < tolerance:
+            print("Converged!")
+            return x_next
+        x = x_next
+    print("Max iterations reached without convergence.")
     return x
 
-# Initial guess for x
-initial_guess = 0.0
+# Parameters
+initial_guess = 2.5  # Starting point for iteration
+tolerance = 1e-6     # Convergence criterion
+max_iterations = 50
 
-# Solve the equation
-solution = solve_nonlinear_equation(initial_guess)
-
-# Print the result
-print(f"Final solution: x = {solution}")
+# Solve
+solution = fixed_point_iteration(initial_guess, tolerance, max_iterations)
+print(f"Solution: x = {solution}")
