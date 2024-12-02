@@ -1,49 +1,89 @@
 ﻿import numpy as np
- #Define the MDP parameters
-S = [0, 1, 2] # State space
-A = [0, 1] # Action space
 
-gamma = 0.9 # Discount factor
+# Define the MDP parameters
+gamma = 0.9  # Discount factor
+states = [0, 1]  # State space
+actions = [0, 1]  # Action space
+num_states = len(states)
+num_actions = len(actions)
 
-# Reward probabilities: P_r[(s, a)] -> list of (reward, probability)
-P_r = {
-    (0, 0): [(1, 1.0)],
-    (0, 1): [(0, 1.0)],
-    (1, 0): [(2, 1.0)],
-    (1, 1): [(0, 1.0)],
-    (2, 0): [(1, 1.0)],
-    (2, 1): [(2, 1.0)],
+# Reward function p[r | s, a]: Expected rewards for each state-action pair
+p_r = {
+    (0, 0): 0,  # Reward for taking action 0 in state 0
+    (0, 1): 1,  # Reward for taking action 1 in state 0
+    (1, 0): 0,  # Reward for taking action 0 in state 1
+    (1, 1): 1   # Reward for taking action 1 in state 1
 }
 
-
-# Transition probabilities: P_s[s' | s, a]
-P_s = {
-    (0, 0): {0: 0.5, 1: 0.5},
-    (0, 1): {0: 1.0},
-    (1, 0): {2: 1.0},
-    (1, 1): {1: 0.7, 0: 0.3},
-    (2, 0): {0: 0.4, 2: 0.6},
-    (2, 1): {2: 1.0},
+# Transition probabilities p[s' | s, a]: Probabilities of transitioning to s' given (s, a)
+p_s_prime = {
+    (0, 0): {0: 0.8, 1: 0.2},  # From state 0, action 0 leads to state 0 (80%) or state 1 (20%)
+    (0, 1): {0: 0.1, 1: 0.9},  # From state 0, action 1 leads to state 0 (10%) or state 1 (90%)
+    (1, 0): {0: 0.7, 1: 0.3},  # From state 1, action 0 leads to state 0 (70%) or state 1 (30%)
+    (1, 1): {0: 0.4, 1: 0.6}   # From state 1, action 1 leads to state 0 (40%) or state 1 (60%)
 }
 
+# Initialize a random policy (uniform random over actions) and value function
+policy = np.ones((num_states, num_actions)) / num_actions  # Equal probability for each action
+value_function = np.zeros(num_states)  # Initial value function
+
+# Policy Iteration Algorithm
 def policy_iteration():
-    # Initialize policy arbitrarily
-    policy = {s: np.random.choice(A) for s in S}
-    
-    def evaluate_policy (policy):
-        V = np.zeros(len(S))
+    global policy, value_function
+    is_policy_stable = False  # To check if the policy has converged
+
+    while not is_policy_stable:
+        # POLICY EVALUATION
         while True:
             delta = 0
-            New_V = V.copy()
-            for s in S:
-                a = policy[s]
-                # 
-                for reward, prob_r in P_r.get((s, a), []):
-                    aaa = prob_r * (reward) 
-                # v_s = sum(
-                #     prob_r * (reward) for reward, prob_r in P_r.get((s, a), [])
-                # )
-exit()
+            for s in range(num_states):
+                # Store the current value
+                v = value_function[s]
+                # Compute the value function under the current policy
+                value_function[s] = sum(policy[s, a] * (
+                    p_r[(s, a)] + gamma * sum(
+                        p_s_prime[(s, a)][s_prime] * value_function[s_prime] for s_prime in range(num_states)
+                    )
+                ) for a in range(num_actions))
+                # Update the maximum change (delta)
+                delta = max(delta, abs(v - value_function[s]))
+            if delta < 1e-6:  # Stop if values converge
+                break
+
+        # POLICY IMPROVEMENT
+        is_policy_stable = True  # Assume policy is stable
+        for s in range(num_states):
+            old_action = np.argmax(policy[s])  # Current best action
+            # Compute the Q-values for all actions in the current state
+            q_values = np.zeros(num_actions)
+            for a in range(num_actions):
+                q_values[a] = p_r[(s, a)] + gamma * sum(
+                    p_s_prime[(s, a)][s_prime] * value_function[s_prime] for s_prime in range(num_states)
+                )
+            # Determine the best action based on Q-values
+            best_action = np.argmax(q_values)
+            # Update policy to be greedy (100% probability on the best action)
+            policy[s] = np.zeros(num_actions)
+            policy[s][best_action] = 1
+            # If the policy changes, it's not stable
+            if old_action != best_action:
+                is_policy_stable = False
+
+    return policy, value_function
+
+# Run the policy iteration algorithm
+optimal_policy, optimal_value_function = policy_iteration()
+
+# Print the results
+print("Optimal Policy (each row corresponds to a state):")
+for s in range(num_states):
+    print(f"State {s}: {optimal_policy[s]} (Action probabilities)")
+
+print("\nOptimal Value Function:")
+for s in range(num_states):
+    print(f"State {s}: {optimal_value_function[s]:.4f}")
+
+
 
 
 
