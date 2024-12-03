@@ -137,8 +137,8 @@ if __name__ == "__main__":
                     
        # render
         env.render(3)
-        # env.add_state_values(state_values_flat)
-        # env.add_policy(policy_matrix)
+        env.add_policy(policy_matrix)
+        env.add_state_values(state_values_flat)
         
         g = 0 # Initialize return
         visited_state_actions = set()

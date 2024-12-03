@@ -25,6 +25,7 @@ class GridWorld():
         self.reward_boundary = -1
 
         self.canvas = None
+        self.draw_state_values = False
         self.animation_interval = args.animation_interval
 
 
@@ -130,6 +131,9 @@ class GridWorld():
             self.start_state_star, = self.ax.plot([], [], marker = '*', color=self.color_start, markersize=20, linewidth=0.5) 
             self.traj_obj, = self.ax.plot([], [], color=self.color_trajectory, linewidth=0.5)
 
+        if self.draw_state_values:
+            pass
+
         # self.agent_circle.center = (self.agent_state[0], self.agent_state[1])
         self.agent_star.set_data([self.agent_state[0]],[self.agent_state[1]])   
         self.start_state_star.set_data([self.start_state[0]],[self.start_state[1]])      
@@ -137,7 +141,8 @@ class GridWorld():
         traj_x, traj_y = zip(*self.traj)         
         self.traj_obj.set_data(traj_x, traj_y)
         plt.draw()
-        plt.pause(animation_interval)
+        
+
         if args.debug:
             input('press Enter to continue...')     
 
@@ -164,3 +169,8 @@ class GridWorld():
             x = i % self.env_size[0]
             y = i // self.env_size[0]
             self.ax.text(x, y, str(value), ha='center', va='center', fontsize=10, color='black')
+        plt.pause(2)
+        plt.close()
+        
+        self.canvas = None
+
