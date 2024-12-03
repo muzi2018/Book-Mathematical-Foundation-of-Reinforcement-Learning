@@ -1,23 +1,15 @@
+
 import sys
-import os
-src_path = os.path.abspath(os.path.join(os.getcwd(), "Code for grid world/python_version/src"))
-sys.path.append(src_path)
-
-print("sys.path = ", sys.path)
-print(os.getcwd())
-
-# from src.grid_world import GridWorld
-from grid_world import GridWorld
+sys.path.append("..")
+from src.grid_world import GridWorld
 import random
 import numpy as np
-
-exit()
 
 # Example usage:
 if __name__ == "__main__":             
     env = GridWorld()
     state = env.reset()               
-    for t in range(1):
+    for t in range(1000):
         env.render()
         action = random.choice(env.action_space)
         next_state, reward, done, info = env.step(action)
@@ -34,8 +26,6 @@ if __name__ == "__main__":
     
     # Add state values
     values = np.random.uniform(0,10,(env.num_states,))
-    print("values")
-    print(values)
     env.add_state_values(values)
 
     # Render the environment

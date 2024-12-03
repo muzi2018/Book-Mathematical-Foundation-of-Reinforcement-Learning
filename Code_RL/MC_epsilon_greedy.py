@@ -40,6 +40,12 @@ if __name__ == "__main__":
     env.forbidden_states = [(1, 1),(2,1),(2,2),(1,3),(1,4),(3,3)]
     env.target_state = (2, 3)
     env.reset()
+    # Generate all state coordinates
+    # states = [(x, y) for x in range(grid_size) for y in range(grid_size)]
+    # states = np.array(states)
+    # values = np.zeros(env.num_states)
+    # state_values = np.array([[s[0], s[1], v] for s, v in zip(states, values)])
+    state_values = np.zeros((grid_size, grid_size))  # A grid for values
 
     # Q-value initialization
     q = np.zeros((grid_size, grid_size, num_actions)) 
@@ -60,19 +66,43 @@ if __name__ == "__main__":
         else:
             # print("epsilon_greedy_policy: ", np.argmax(q[state[0], state[1]]))
             return np.argmax(q[state[0], state[1]])  # Exploit
+    
+    def generate_episode(policy, state_values, alpha=0.1):
+        '''
+        Generate an episode using the given policy and update state values.
 
-    # Function to generate an episode based on the policy
-    def generate_episode(policy):
+        Args:
+            policy: The policy being used for action selection.
+            state_values: A dictionary or array holding the state values V(s).
+            alpha: Learning rate for updating state values.
+        
+        Returns:
+            episode: A list of (state, action, reward) tuples for the generated episode.
+        '''
         episode = []
         state = (np.random.randint(grid_size), np.random.randint(grid_size))  # Start in a random state
-        while state!= env.target_state:  # Don't start at target or forbidden state
-            
+
+        while state != env.target_state:  # Continue until the target state is reached
+            # Select an action using the epsilon-greedy policy
             action_index = epsilon_greedy_policy(state, epsilon)
             action = actions[action_index]
+
+            # Take a step in the environment
             next_state, reward, done, info = env.step(action)
+            
+            # Update the state value function V(s) using temporal difference (TD) learning
+            # V(s) <- V(s) + alpha * [reward + gamma * V(next_state) - V(s)]
+            state_values[state[0], state[1]] += alpha * (
+                reward + gamma * state_values[next_state[0], next_state[1]] - state_values[state[0], state[1]]
+            )
+            # Add the current transition to the episode
             episode.append((state, action, reward))
+
+            # Move to the next state
             state = next_state
-        return episode
+
+        return episode, state_values
+
 
     # Initialize a random policy (uniform random for each state)
     policy = {
@@ -84,8 +114,11 @@ if __name__ == "__main__":
     for num_ in range(num_episodes):
         # Generate an episode
         print("episode is ", num_)
-        episode = generate_episode(policy)
+        episode, state_values = generate_episode(policy, state_values)
+        state_values_flat = state_values.flatten()
         env.render()
+        env.add_state_values(state_values_flat)
+
         env.render(animation_interval=2) 
         g = 0 # Initialize return
         visited_state_actions = set()
