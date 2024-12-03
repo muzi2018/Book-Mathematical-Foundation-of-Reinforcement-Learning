@@ -4,11 +4,7 @@ from grid_world import GridWorld
 import random
 import numpy as np
 import random
-# 3 - Chapter 2 State Values and Bellman Equation
-# 1. state value: which is defined as the average reward that an agent can obtain if it follows a given policy
-# 2. Bellman equation which is an important tool for analyzing state values, in a nutshell, Bellman equation describes the relationships between the values of all states. By solving the Bellman equation , we can obtain the state values
-# 3. policy evaluation: By solving the Bellman equation to obtain the state values.
-# 4. action value
+import matplotlib.pyplot as plt
 
 #
 if __name__ == "__main__":      
@@ -68,8 +64,8 @@ if __name__ == "__main__":
     def generate_episode(policy):
         episode = []
         state = (np.random.randint(grid_size), np.random.randint(grid_size))  # Start in a random state
-        while state!= env.target_state and state!= env.forbidden_states:  # Don't start at target or forbidden state
-            
+        while state!= env.target_state:  # Don't start at target or forbidden state
+            # env.render()
             action_index = epsilon_greedy_policy(state, epsilon)
             action = actions[action_index]
             next_state, reward, done, info = env.step(action)
@@ -84,8 +80,9 @@ if __name__ == "__main__":
     # Tracking for visualization
     q_values_over_time = []
     # Main loop for Monte Carlo epsilon-greedy
-    for _ in range(num_episodes):
+    for num_ in range(num_episodes):
         # Generate an episode
+        print("episode is ", num_)
         episode = generate_episode(policy)
         g = 0 # Initialize return
         visited_state_actions = set()
@@ -110,7 +107,22 @@ if __name__ == "__main__":
         
         # Record q-values for visualization
         q_values_over_time.append(q.copy())
-    exit()
+        
+        
+# Plotting results
+plt.figure(figsize=(10, 6))
+for i in range(grid_size):
+    for j in range(grid_size):
+        for action in range(num_actions):
+            values = [q_t[i, j, action] for q_t in q_values_over_time]  # Plot the first Q-value
+            plt.plot(values, label=f"Q({i},{j},{actions[action]})")
+plt.xlabel("Episodes")
+plt.ylabel("Q-value")
+plt.title("Convergence of Q-values in MC $\epsilon$-Greedy")
+plt.legend(bbox_to_anchor=(1.05, 1), loc='upper left')
+plt.tight_layout()
+plt.show()
+        
     
     
     
