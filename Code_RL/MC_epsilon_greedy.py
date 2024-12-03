@@ -12,8 +12,8 @@ if __name__ == "__main__":
     
     # Parameters
     gamma = 0.9  # Discount factor
-    epsilon = 0.2  # Exploration rate
-    num_episodes = 10
+    epsilon = 0.1  # Exploration rate
+    num_episodes = 500
     grid_size = 5  # 5x5 grid
 
     ## aciton 
@@ -49,6 +49,14 @@ if __name__ == "__main__":
 
     # Q-value initialization
     q = np.zeros((grid_size, grid_size, num_actions)) 
+    
+    # Initialize Q-values using np.random.uniform with a range [low, high]
+    low = -1  # Lower bound of Q-value
+    high = 1   # Upper bound of Q-value
+
+    q = np.random.uniform(low, high, (grid_size, grid_size, num_actions))  # Initialize random Q-values
+
+    
     # for i in range(grid_size):
     #     for j in range(grid_size):
     #         q[i,j] = set(actions)
@@ -134,12 +142,6 @@ if __name__ == "__main__":
                     # Find the corresponding row for the state and set the probability for that action
                     state_index = i * grid_size + j
                     policy_matrix[state_index, action_idx] = prob
-                    
-       # render
-        env.render(3)
-        env.add_policy(policy_matrix)
-        env.add_state_values(state_values_flat)
-        
         g = 0 # Initialize return
         visited_state_actions = set()
         for t in reversed(range(len(episode))):
@@ -162,6 +164,11 @@ if __name__ == "__main__":
         
         # Record q-values for visualization
         q_values_over_time.append(q.copy())
+           # render
+        if num_ >= num_episodes-1:
+            env.render(3)
+            env.add_policy(policy_matrix)
+            env.add_state_values(state_values_flat)
         
         
 # # Plotting results
