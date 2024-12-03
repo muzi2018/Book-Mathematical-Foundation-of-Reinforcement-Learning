@@ -36,10 +36,10 @@ if __name__ == "__main__":
     ## env, row->x, column->y
     env.env_size = (grid_size, grid_size)
     env.num_states = grid_size * grid_size
-    env.start_state = (np.random.randint(grid_size), np.random.randint(grid_size)) 
+    
     env.forbidden_states = [(1, 1),(2,1),(2,2),(1,3),(1,4),(3,3)]
     env.target_state = (2, 3)
-    env.reset()
+    
     # Generate all state coordinates
     # states = [(x, y) for x in range(grid_size) for y in range(grid_size)]
     # states = np.array(states)
@@ -80,8 +80,11 @@ if __name__ == "__main__":
             episode: A list of (state, action, reward) tuples for the generated episode.
         '''
         episode = []
-        state = (np.random.randint(grid_size), np.random.randint(grid_size))  # Start in a random state
-
+        env.start_state = (np.random.randint(grid_size), np.random.randint(grid_size)) 
+        env.reset()
+        state = env.start_state  # Start in a random state
+        print("start_state' = ", state)
+        # env.traj = []
         while state != env.target_state:  # Continue until the target state is reached
             # Select an action using the epsilon-greedy policy
             action_index = epsilon_greedy_policy(state, epsilon)
@@ -100,7 +103,8 @@ if __name__ == "__main__":
 
             # Move to the next state
             state = next_state
-
+        ##### clear trajectory
+        
         return episode, state_values
 
 
@@ -132,9 +136,9 @@ if __name__ == "__main__":
                     policy_matrix[state_index, action_idx] = prob
                     
        # render
-        env.render()
-        env.add_state_values(state_values_flat)
-        env.add_policy(policy_matrix)
+        env.render(3)
+        # env.add_state_values(state_values_flat)
+        # env.add_policy(policy_matrix)
         
         g = 0 # Initialize return
         visited_state_actions = set()
@@ -160,19 +164,19 @@ if __name__ == "__main__":
         q_values_over_time.append(q.copy())
         
         
-# Plotting results
-plt.figure(figsize=(10, 6))
-for i in range(grid_size):
-    for j in range(grid_size):
-        for action in range(num_actions):
-            values = [q_t[i, j, action] for q_t in q_values_over_time]  # Plot the first Q-value
-            plt.plot(values, label=f"Q({i},{j},{actions[action]})")
-plt.xlabel("Episodes")
-plt.ylabel("Q-value")
-plt.title("Convergence of Q-values in MC $\epsilon$-Greedy")
-plt.legend(bbox_to_anchor=(1.05, 1), loc='upper left')
-plt.tight_layout()
-plt.show()
+# # Plotting results
+# plt.figure(figsize=(10, 6))
+# for i in range(grid_size):
+#     for j in range(grid_size):
+#         for action in range(num_actions):
+#             values = [q_t[i, j, action] for q_t in q_values_over_time]  # Plot the first Q-value
+#             plt.plot(values, label=f"Q({i},{j},{actions[action]})")
+# plt.xlabel("Episodes")
+# plt.ylabel("Q-value")
+# plt.title("Convergence of Q-values in MC $\epsilon$-Greedy")
+# plt.legend(bbox_to_anchor=(1.05, 1), loc='upper left')
+# # plt.tight_layout()
+# plt.show()
         
     
     

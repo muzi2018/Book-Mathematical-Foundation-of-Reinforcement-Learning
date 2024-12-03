@@ -30,6 +30,7 @@ class GridWorld():
 
         self.color_forbid = (0.9290,0.6940,0.125)
         self.color_target = (0.3010,0.7450,0.9330)
+        self.color_start = (1.0, 0.0, 0.0)
         self.color_policy = (0.4660,0.6740,0.1880)
         self.color_trajectory = (0, 1, 0)
         self.color_agent = (0,0,1)
@@ -120,15 +121,19 @@ class GridWorld():
             self.target_rect = patches.Rectangle( (self.target_state[0]-0.5, self.target_state[1]-0.5), 1, 1, linewidth=1, edgecolor=self.color_target, facecolor=self.color_target)
             self.ax.add_patch(self.target_rect)     
 
+
             for forbidden_state in self.forbidden_states:
                 rect = patches.Rectangle((forbidden_state[0]-0.5, forbidden_state[1]-0.5), 1, 1, linewidth=1, edgecolor=self.color_forbid, facecolor=self.color_forbid)
                 self.ax.add_patch(rect)
 
             self.agent_star, = self.ax.plot([], [], marker = '*', color=self.color_agent, markersize=20, linewidth=0.5) 
+            self.start_state_star, = self.ax.plot([], [], marker = '*', color=self.color_start, markersize=20, linewidth=0.5) 
             self.traj_obj, = self.ax.plot([], [], color=self.color_trajectory, linewidth=0.5)
 
         # self.agent_circle.center = (self.agent_state[0], self.agent_state[1])
-        self.agent_star.set_data([self.agent_state[0]],[self.agent_state[1]])       
+        self.agent_star.set_data([self.agent_state[0]],[self.agent_state[1]])   
+        self.start_state_star.set_data([self.start_state[0]],[self.start_state[1]])      
+    
         traj_x, traj_y = zip(*self.traj)         
         self.traj_obj.set_data(traj_x, traj_y)
         plt.draw()
