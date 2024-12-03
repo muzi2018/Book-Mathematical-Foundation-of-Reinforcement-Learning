@@ -131,7 +131,6 @@ class GridWorld():
         self.agent_star.set_data([self.agent_state[0]],[self.agent_state[1]])       
         traj_x, traj_y = zip(*self.traj)         
         self.traj_obj.set_data(traj_x, traj_y)
-
         plt.draw()
         plt.pause(animation_interval)
         if args.debug:

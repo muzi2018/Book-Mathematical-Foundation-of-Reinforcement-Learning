@@ -117,10 +117,7 @@ if __name__ == "__main__":
         print("episode is ", num_)
         episode, state_values = generate_episode(policy, state_values)
         state_values_flat = state_values.flatten()
-        # render
-        env.render()
-        env.add_state_values(state_values_flat)
-        
+ 
         # Add policy     
         policy_matrix = np.zeros((grid_size * grid_size, num_actions))
         action_to_index = {action: idx for idx, action in enumerate(actions)}
@@ -134,10 +131,10 @@ if __name__ == "__main__":
                     state_index = i * grid_size + j
                     policy_matrix[state_index, action_idx] = prob
                     
-        env.add_policy(policy_matrix)       
-        env.render(animation_interval=2) 
-        
-        
+       # render
+        env.render()
+        env.add_state_values(state_values_flat)
+        env.add_policy(policy_matrix)
         
         g = 0 # Initialize return
         visited_state_actions = set()
