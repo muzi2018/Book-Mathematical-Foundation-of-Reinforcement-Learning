@@ -16,12 +16,14 @@ class GridWorld():
         self.start_state = start_state
         self.target_state = target_state
         self.forbidden_states = forbidden_states
+        
 
         self.agent_state = start_state
         self.action_space = args.action_space          
         self.reward_target = args.reward_target
         self.reward_forbidden = args.reward_forbidden
         self.reward_step = args.reward_step
+        self.reward_boundary = -1
 
         self.canvas = None
         self.animation_interval = args.animation_interval
@@ -66,16 +68,16 @@ class GridWorld():
         new_state = tuple(np.array(state) + np.array(action))
         if y + 1 > self.env_size[1] - 1 and action == (0,1):    # down to boundary
             y = self.env_size[1] - 1
-            reward = self.reward_forbidden  
+            reward = self.reward_boundary  
         elif x + 1 > self.env_size[0] - 1 and action == (1,0):  # right to boundary
             x = self.env_size[0] - 1
-            reward = self.reward_forbidden  
+            reward = self.reward_boundary  
         elif y - 1 < 0 and action == (0,-1):   # up to boundary
             y = 0
-            reward = self.reward_forbidden  
+            reward = self.reward_boundary  
         elif x - 1 < 0 and action == (-1, 0):  # left to boundary
             x = 0
-            reward = self.reward_forbidden 
+            reward = self.reward_boundary 
         elif new_state == self.target_state:  # stay in target 
             x, y = self.target_state
             reward = self.reward_target

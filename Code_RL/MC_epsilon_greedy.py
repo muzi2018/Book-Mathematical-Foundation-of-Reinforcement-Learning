@@ -27,7 +27,8 @@ if __name__ == "__main__":
     rstep = 0
     '''
     ## reward
-    env.reward_forbidden = -1
+    env.reward_boundary = -1
+    env.reward_forbidden = -10
     env.reward_step = 0
     env.reward_target = 1
     
@@ -65,7 +66,7 @@ if __name__ == "__main__":
         episode = []
         state = (np.random.randint(grid_size), np.random.randint(grid_size))  # Start in a random state
         while state!= env.target_state:  # Don't start at target or forbidden state
-            # env.render()
+            
             action_index = epsilon_greedy_policy(state, epsilon)
             action = actions[action_index]
             next_state, reward, done, info = env.step(action)
@@ -84,6 +85,8 @@ if __name__ == "__main__":
         # Generate an episode
         print("episode is ", num_)
         episode = generate_episode(policy)
+        env.render()
+        env.render(animation_interval=2) 
         g = 0 # Initialize return
         visited_state_actions = set()
         
