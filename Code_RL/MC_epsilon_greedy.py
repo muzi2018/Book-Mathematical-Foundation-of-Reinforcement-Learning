@@ -106,7 +106,8 @@ if __name__ == "__main__":
 
     # Initialize a random policy (uniform random for each state)
     policy = {
-        (i, j): {action: 1 / num_actions for action in actions} for i in range(grid_size) for j in range(grid_size)
+        (i, j): {action: 1 / num_actions for action in actions} 
+        for i in range(grid_size) for j in range(grid_size)
     }
     # Tracking for visualization
     q_values_over_time = []
@@ -116,13 +117,30 @@ if __name__ == "__main__":
         print("episode is ", num_)
         episode, state_values = generate_episode(policy, state_values)
         state_values_flat = state_values.flatten()
+        # render
         env.render()
         env.add_state_values(state_values_flat)
-
+        
+        # Add policy     
+        policy_matrix = np.zeros((grid_size * grid_size, num_actions))
+        action_to_index = {action: idx for idx, action in enumerate(actions)}
+        for i in range(grid_size):
+            for j in range(grid_size):
+                state = (i, j)
+                # Extract the probability for each action from the policy
+                for action, prob in policy[state].items():
+                    action_idx = action_to_index[action]
+                    # Find the corresponding row for the state and set the probability for that action
+                    state_index = i * grid_size + j
+                    policy_matrix[state_index, action_idx] = prob
+                    
+        env.add_policy(policy_matrix)       
         env.render(animation_interval=2) 
+        
+        
+        
         g = 0 # Initialize return
         visited_state_actions = set()
-        
         for t in reversed(range(len(episode))):
             state, action, reward = episode[t]
             g = gamma * g + reward
