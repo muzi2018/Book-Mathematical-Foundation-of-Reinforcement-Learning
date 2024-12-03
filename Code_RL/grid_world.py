@@ -45,8 +45,8 @@ class GridWorld():
         assert action in self.action_space, "Invalid action"
 
         next_state, reward  = self._get_next_state_and_reward(self.agent_state, action)
-        if(next_state == (0,0)):
-            print("next_state in step is 0 0")
+        # if(next_state == (0,0)):
+        #     print("next_state in step is 0 0")
         done = self._is_done(next_state)
 
         x_store = next_state[0] + 0.03 * np.random.randn()
@@ -64,30 +64,30 @@ class GridWorld():
     def _get_next_state_and_reward(self, state, action):
         x, y = state
         new_state = tuple(np.array(state) + np.array(action))
-        if y + 1 > self.env_size[1] - 1 and action == (0,1):    # down
+        if y + 1 > self.env_size[1] - 1 and action == (0,1):    # down to boundary
             y = self.env_size[1] - 1
             reward = self.reward_forbidden  
-        elif x + 1 > self.env_size[0] - 1 and action == (1,0):  # right
+        elif x + 1 > self.env_size[0] - 1 and action == (1,0):  # right to boundary
             x = self.env_size[0] - 1
             reward = self.reward_forbidden  
-        elif y - 1 < 0 and action == (0,-1):   # up
+        elif y - 1 < 0 and action == (0,-1):   # up to boundary
             y = 0
             reward = self.reward_forbidden  
-        elif x - 1 < 0 and action == (-1, 0):  # left
+        elif x - 1 < 0 and action == (-1, 0):  # left to boundary
             x = 0
             reward = self.reward_forbidden 
-        elif new_state == self.target_state:  # stay
+        elif new_state == self.target_state:  # stay in target 
             x, y = self.target_state
             reward = self.reward_target
-        elif new_state in self.forbidden_states:  # stay
+        elif new_state in self.forbidden_states:  # stay in forbidden
             x, y = new_state
             reward = self.reward_forbidden        
         else:
             (x, y) = new_state
             reward = self.reward_step
-        print("new_state: ", new_state)
-        if((x, y) == (0,0)):
-            print("new_state = 0 0 in _get_next_state_and_reward")
+        # print("new_state: ", new_state)
+        # if((x, y) == (0,0)):
+        #     print("new_state = 0 0 in _get_next_state_and_reward")
         return (x, y), reward
         
 
