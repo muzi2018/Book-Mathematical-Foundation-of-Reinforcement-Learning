@@ -12,7 +12,7 @@ if __name__ == "__main__":
     
     # Parameters
     gamma = 0.9  # Discount factor
-    epsilon = 0.1  # Exploration rate
+    epsilon = 0.5  # Exploration rate
     num_episodes = 500
     grid_size = 5  # 5x5 grid
 
@@ -74,7 +74,7 @@ if __name__ == "__main__":
         else:
             # print("epsilon_greedy_policy: ", np.argmax(q[state[0], state[1]]))
             return np.argmax(q[state[0], state[1]])  # Exploit
-    
+    episode_len = 1000
     def generate_episode(policy, state_values, alpha=0.1):
         '''
         Generate an episode using the given policy and update state values.
@@ -93,8 +93,13 @@ if __name__ == "__main__":
         state = env.start_state  # Start in a random state
         print("start_state' = ", state)
         # env.traj = []
-        while state != env.target_state:  # Continue until the target state is reached
+        i = 0
+        while i <= episode_len:  # Continue until the target state is reached
             # Select an action using the epsilon-greedy policy
+           # render
+            env.render(1)
+            # env.add_policy(policy_matrix)
+            # env.add_state_values(state_values_flat)
             action_index = epsilon_greedy_policy(state, epsilon)
             action = actions[action_index]
 
@@ -164,11 +169,7 @@ if __name__ == "__main__":
         
         # Record q-values for visualization
         q_values_over_time.append(q.copy())
-           # render
-        if num_ >= num_episodes-1:
-            env.render(3)
-            env.add_policy(policy_matrix)
-            env.add_state_values(state_values_flat)
+
         
         
 # # Plotting results
