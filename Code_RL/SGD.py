@@ -137,6 +137,9 @@ print(f"Final value of w_k after {num_iterations} iterations: {w_k:.4f}")
 w_values = np.linspace(0, 10, 100)  # Range of w values for plotting J(w)
 J_values = [J(w, X_samples) for w in w_values]
 
+{}
+
+
 # Plotting
 plt.figure(figsize=(10, 6))
 plt.plot(w_values, J_values, label="J(w)", color='blue')
