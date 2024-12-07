@@ -41,6 +41,9 @@ class GridWorld():
     def reset(self):
         self.agent_state = self.start_state
         self.traj = [self.agent_state] 
+        self.states = [(x, y) for x in range(self.env_size[0]) for y in range(self.env_size[0])]
+        self.state_index = {state: i for i, state in enumerate(self.states)}  # Map (x, y) to index
+
         return self.agent_state, {}
 
 
@@ -141,7 +144,7 @@ class GridWorld():
         traj_x, traj_y = zip(*self.traj)         
         self.traj_obj.set_data(traj_x, traj_y)
         plt.draw()
-        plt.pause(animation_interval)
+        plt.pause(animation_interval )
         if args.debug:
             input('press Enter to continue...')     
 
