@@ -12,11 +12,9 @@ if __name__ == "__main__":
     
     # Parameters
     gamma = 0.9  # Discount factor
-    epsilon = 0.5  # Exploration rate
     grid_size = 5  # 5x5 grid
     num_episodes = 500
     
-
     # environment 
     ##action up_ = (0,-1); down_ = (0, 1); left_ = (-1, 0); right_ = (1, 0)
     actions = [(0,-1), (0, 1), (-1,0), (1,0)]
@@ -24,15 +22,12 @@ if __name__ == "__main__":
 
     ## reward
     '''
-    reward setup
-    rforbidden = -1
-    rtarget = 1
-    rstep = 0
+    reward setup:rboundary = -1; rforbidden = -1; rtarget = 1; rstep = 0
     '''
     env.reward_boundary = -1
-    env.reward_forbidden = -10
-    env.reward_step = 0
+    env.reward_forbidden = -1
     env.reward_target = 1
+    env.reward_step = 0
     
     ## Create grid row->x, column->y
     env.env_size = (grid_size, grid_size)
@@ -41,13 +36,12 @@ if __name__ == "__main__":
     env.target_state = (2, 3)
     
     state_values = np.zeros((grid_size, grid_size))  # A grid for values
-
-    # Initialize Q-values using np.random.uniform with a range [low, high]
-    low = -1  
-    high = 1   
-    q = np.random.uniform(low, high, (grid_size, grid_size, num_actions))  # Initialize random Q-values
     returns = np.zeros((grid_size, grid_size, num_actions))  # Cumulative returns
-    num_visits = np.zeros((grid_size, grid_size, num_actions))  # Visit counts
+
+    # low = -1  
+    # high = 1   
+    # q = np.random.uniform(low, high, (grid_size, grid_size, num_actions))  # Initialize random Q-values
+    # num_visits = np.zeros((grid_size, grid_size, num_actions))  # Visit counts
 
     # Function to choose action based on epsilon-greedy policy
     def epsilon_greedy_policy(state, epsilon):
@@ -79,7 +73,9 @@ if __name__ == "__main__":
             episode.append((state, action, reward))
             state = next_state        
         return episode, state_values
-
+    
+    
+if __name__ == "__main__":
     policy = {
         (i, j): {action: 1 / num_actions for action in actions} 
         for i in range(grid_size) for j in range(grid_size)
