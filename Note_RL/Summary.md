@@ -18,7 +18,7 @@ $q_\pi(s, a)=\sum_{r \in \mathcal{R}} p(r \mid s, a) r+\gamma \sum_{s^{\prime} \
 
 
 
-# Optimal policy
+# Bellman optimal equation 
 
 Bellman optimal equation 
 
@@ -26,7 +26,38 @@ $v^*=\max _{\pi \in \Pi}\left(r_\pi+\gamma P_\pi v^*\right)$
 
 
 
-# Value Iteration and Policy Iteration
+# Model-based Solver
+
+**Value Iteration and Policy Iteration**
+
+# Model-free Solver
+
+**Monte Carlo**
+
+**TD learning**: SARSA, n-step SARSA, Q-learning
+
+# Off-policy
+
+behavior policy (generate experience samples)= target policy (converge to an optimal policy)
+
+Q-learning
+
+# On-policy
 
 
 
+# Tabular-base
+
+
+
+# Function-base
+
+Value Function: state value, action value, Deep Q-learning
+
+Policy Gradient Method: From metric - Average state value, Average reward
+
+# Actor-Critic( policy gradient algorithm)
+
+“actor” refers to a policy update step
+
+“critic” refers to a value update step
