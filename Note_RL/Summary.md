@@ -94,11 +94,7 @@
 
 $G_t=R_{t+1}+\gamma R_{t+2}+\gamma^2 R_{t+3}+\ldots$
 
-$v_{\pi}(s)=\mathbb{E}\left[R_{t+1} \mid S_t=s\right]+\gamma \mathbb{E}\left[G_{t+1} \mid S_t=s\right]$
-
-$\mathbb{E}\left[R_{t+1} \mid S_t=s\right]=\sum_{a \in \mathcal{A}} \pi(a \mid s) \sum_{r \in \mathcal{R}} p(r \mid s, a) r$
-
-$\mathbb{E}\left[G_{t+1} \mid S_t=s\right]=\sum_{a \in \mathcal{A}} \pi(a \mid s) \sum_{s^{\prime} \in \mathcal{S}} p\left(s^{\prime} \mid s, a\right) v_\pi\left(s^{\prime}\right)$
+$\begin{aligned} v_\pi(s) & =\mathbb{E}\left[R_{t+1} \mid S_t=s\right]+\gamma \mathbb{E}\left[G_{t+1} \mid S_t=s\right], \\ & =\underbrace{\sum_{a \in \mathcal{A}} \pi(a \mid s) \sum_{r \in \mathcal{R}} p(r \mid s, a) r}_{\text {mean of immediate rewards }}+\underbrace{\gamma \sum_{a \in \mathcal{A}} \pi(a \mid s) \sum_{s^{\prime} \in \mathcal{S}} p\left(s^{\prime} \mid s, a\right) v_\pi\left(s^{\prime}\right)}_{\text {mean of future rewards }} \\ & =\sum_{a \in \mathcal{A}} \pi(a \mid s)\left[\sum_{r \in \mathcal{R}} p(r \mid s, a) r+\gamma \sum_{s^{\prime} \in \mathcal{S}} p\left(s^{\prime} \mid s, a\right) v_\pi\left(s^{\prime}\right)\right], \quad \text { for all } s \in \mathcal{S} .\end{aligned}$
 
 
 
@@ -153,3 +149,24 @@ Policy Gradient Method: From metric - Average state value, Average reward
 “actor” refers to a policy update step
 
 “critic” refers to a value update step
+
+
+
+
+
+# Grid World Example
+
+v_pi(s1) = 8.00
+v_pi(s2) = 10.00
+v_pi(s3) = 10.00
+v_pi(s4) = 10.00
+q_pi(s1, a1) = 6.20
+q_pi(s1, a2) = 8.00
+q_pi(s1, a3) = 9.00
+q_pi(s1, a4) = 6.20
+q_pi(s1, a5) = 7.20
+
+actions: 5
+
+states: 4
+

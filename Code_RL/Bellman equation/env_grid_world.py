@@ -34,6 +34,7 @@ if __name__ == "__main__":
     env.num_states = grid_size * grid_size
     env.forbidden_states = [(1, 1),(2,1),(2,2),(1,3),(1,4),(3,3)]
     env.target_state = (2, 3)
+    episode_len = 10
     
     state_values = np.zeros((grid_size, grid_size))  # A grid for values
     returns = np.zeros((grid_size, grid_size, num_actions))  # Cumulative returns
