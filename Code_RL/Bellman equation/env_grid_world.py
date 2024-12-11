@@ -37,20 +37,6 @@ if __name__ == "__main__":
     
     state_values = np.zeros((grid_size, grid_size))  # A grid for values
     returns = np.zeros((grid_size, grid_size, num_actions))  # Cumulative returns
-
-    # low = -1  
-    # high = 1   
-    # q = np.random.uniform(low, high, (grid_size, grid_size, num_actions))  # Initialize random Q-values
-    # num_visits = np.zeros((grid_size, grid_size, num_actions))  # Visit counts
-
-    # Function to choose action based on epsilon-greedy policy
-    def epsilon_greedy_policy(state, epsilon):
-        if np.random.rand() < epsilon:
-            return np.random.choice(num_actions)  # Explore
-        else:
-            # print("epsilon_greedy_policy: ", np.argmax(q[state[0], state[1]]))
-            return np.argmax(q[state[0], state[1]])  # Exploit
-    episode_len = 1000
     
     def generate_episode(policy, state_values, alpha=0.1):
         episode = []
